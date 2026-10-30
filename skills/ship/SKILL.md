@@ -1,6 +1,6 @@
 ---
 name: ship
-description: "Implement a ticket, ablate speculative defenses and shallow abstractions, loop a Codex thermo-nuclear review in Herdr until PASS, then open the PR."
+description: "Implement a ticket, ablate speculative defenses and shallow abstractions, loop a Codex thermo-nuclear review in Herdr until PASS, show before/after UI screenshots, then open the PR."
 disable-model-invocation: true
 ---
 
