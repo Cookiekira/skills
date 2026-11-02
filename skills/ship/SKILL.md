@@ -1,6 +1,6 @@
 ---
 name: ship
-description: "Implement a ticket, ablate speculative defenses and shallow abstractions, loop a Codex thermo-nuclear review in Herdr until PASS, show before/after UI screenshots, then open the PR."
+description: "Implement a ticket, ablate speculative defenses and shallow abstractions, loop a Codex thermo-nuclear review in Herdr or Rex until PASS, show before/after UI screenshots, then open the PR."
 disable-model-invocation: true
 ---
 
@@ -31,13 +31,14 @@ Done when every guard and every newly named abstraction in the diff is either de
 
 ## 3. Review loop
 
-Load the `herdr` skill.
-
 ### Reviewer
 
-Reuse a live Codex agent with `herdr agent list`, and send it `/new` if it reviewed earlier work. If there is none, split a pane to the right and start one with `--kind codex`, named `reviewer`.
+The reviewer is one interactive Codex agent that keeps its conversation across every round of this ticket, so each round builds on what it already read. Send it `/new` only when it last reviewed a different ticket.
 
-A prompt sent while `/new` is still resetting is dropped, even after `/new --wait` returns. After every prompt, check that `herdr agent get <reviewer>` reports `working`, and resend it if the agent is still `idle`.
+Drive it through the terminal multiplexer this session runs in, with the recipe for that multiplexer:
+
+- Herdr (`HERDR_ENV=1`): [`reviewer-herdr.md`](reviewer-herdr.md)
+- Rex (`REX_SESSION` set): [`reviewer-rex.md`](reviewer-rex.md)
 
 ### Prompt
 
@@ -52,7 +53,7 @@ For round `n`, write the prompt to `<scratchpad>/review-<n>-prompt.md`. Then sen
 
 ### Running a round
 
-Run `herdr agent prompt <reviewer> "Read and follow <path>" --wait --timeout 1800000` as a background Bash command, and wait for its notification. Read the report file, not the pane.
+Send `Read and follow <path>` with the recipe, and wait for the round in the background. Read the report file, not the pane.
 
 ### Handling findings
 
