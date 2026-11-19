@@ -29,7 +29,7 @@ Done when a Claude works inside the worktree: this one, or the one the recipe ha
 ## 2. Implement
 
 1. If given a ticket you have not read yet, run `gh issue view <n>` and state its title.
-2. Install dependencies with the repo's package manager; a new worktree starts without them.
+2. A new worktree starts bare: run `<this skill's dir>/link-env.sh` to symlink the main checkout's `.env*` files, and install dependencies with the repo's package manager.
 3. Implement the ticket, following the repo's `AGENTS.md`.
 4. Validate with the repo's commands, then commit.
 
