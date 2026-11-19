@@ -1,15 +1,25 @@
-# Reviewer in Rex
+# Rex
 
 Load the `rex` skill.
+
+## Hand off
+
+Start a session named after the label, rooted in the worktree:
+
+```sh
+rex new <label> -c "<worktree>" --json -- claude --dangerously-skip-permissions "/ship <argument>"
+```
+
+## Reviewer
 
 **Start or reuse.** Reuse the pane labelled `reviewer` from `rex block ls -s "$REX_SESSION"` while it still runs Codex. Otherwise start one beside your pane, and save the returned `.block_ids[0]` as the reviewer block:
 
 ```sh
 rex split -s "$REX_SESSION" -b "$REX_BLOCK" --split=right --label reviewer --focus=false \
-  -c "<repo>" --json -- codex -s workspace-write --add-dir "<scratchpad>"
+  -c "<repo>" --json -- codex --dangerously-bypass-approvals-and-sandbox
 ```
 
-`--add-dir` lets the reviewer write its report into the scratchpad.
+The bypass lets it read the ticket over the network, write its report into the scratchpad, and drive a browser for screenshots without stopping on approvals.
 
 **Send.** Codex reads an Enter that arrives right after typed text as part of a paste, and inserts a newline. Type the prompt, pause a few seconds, then press Enter:
 

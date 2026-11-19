@@ -1,6 +1,6 @@
 ---
 name: ship
-description: "Implement a ticket, ablate speculative defenses and shallow abstractions, loop a Codex thermo-nuclear review in Herdr or Rex until PASS, show before/after UI screenshots, then open the PR."
+description: "Implement a ticket in its own worktree and session, ablate speculative defenses and shallow abstractions, loop a Codex thermo-nuclear review in Herdr, Rex, or Paseo until PASS, show before/after UI screenshots, then open the PR."
 disable-model-invocation: true
 ---
 
@@ -8,15 +8,35 @@ disable-model-invocation: true
 
 Take one ticket from implementation to an open, green PR. The argument is a ticket reference (`#926`) or a short task description.
 
-## 1. Implement
+## Multiplexer
 
-1. If given a ticket, run `gh issue view <n>` and state its title. Branch from a fresh `origin/main`.
-2. Implement it, following the repo's `AGENTS.md`.
-3. Validate with the repo's commands, then commit.
+Each ticket runs in its own worktree and its own multiplexer session, so every pane in that session shares one checkout. Use the recipe for the multiplexer this session runs in; each covers the hand-off and the reviewer:
+
+- Herdr (`HERDR_ENV=1`): [`herdr.md`](herdr.md)
+- Rex (`REX_SESSION` set): [`rex.md`](rex.md)
+- Paseo (`PASEO_AGENT_ID` set): [`paseo.md`](paseo.md)
+
+## 1. Start in a worktree
+
+Skip to step 2 when `git rev-parse --git-dir` differs from `git rev-parse --git-common-dir`: this session already runs in a linked worktree.
+
+1. If given a ticket, run `gh issue view <n>` and state its title.
+2. Pick a label (`<ticket number>-<two-word slug>`, or a 2 to 4 word slug for a description) and a branch name in the repo's convention.
+3. Run `<this skill's dir>/worktree.sh <label> <branch>`. It branches from a fresh `origin/main` into `<main checkout>.<label>`, symlinks the gitignored `.env*` files, and prints the worktree path.
+4. Hand off with the recipe's **Hand off**, passing this skill's original argument, then stop.
+
+Done when a Claude in the new session is running `/ship` inside the worktree.
+
+## 2. Implement
+
+1. If given a ticket, run `gh issue view <n>` and state its title.
+2. Install dependencies with the repo's package manager; a new worktree starts without them.
+3. Implement the ticket, following the repo's `AGENTS.md`.
+4. Validate with the repo's commands, then commit.
 
 Done when the ticket's acceptance criteria are met, validation passes, and the work is committed.
 
-## 2. Ablate
+## 3. Ablate
 
 Ablation deletes two things from `git diff origin/main...HEAD`:
 
@@ -29,16 +49,13 @@ Keep **behaviour**: a branch that produces a distinct observable outcome (a stat
 
 Done when every guard and every newly named abstraction in the diff is either deleted, or you can name the real caller or reachable state that needs it. Then validate and commit.
 
-## 3. Review loop
+## 4. Review loop
 
 ### Reviewer
 
-The reviewer is one interactive Codex agent that keeps its conversation across every round of this ticket, so each round builds on what it already read. Send it `/new` only when it last reviewed a different ticket.
+The reviewer is one interactive Codex agent that keeps its conversation across every round of this ticket, so each round builds on what it already read. Reset it only when it last reviewed a different ticket, as the recipe says.
 
-Drive it through the terminal multiplexer this session runs in, with the recipe for that multiplexer:
-
-- Herdr (`HERDR_ENV=1`): [`reviewer-herdr.md`](reviewer-herdr.md)
-- Rex (`REX_SESSION` set): [`reviewer-rex.md`](reviewer-rex.md)
+Drive it with the recipe's **Reviewer** section.
 
 ### Prompt
 
@@ -57,13 +74,13 @@ Send `Read and follow <path>` with the recipe, and wait for the round in the bac
 
 ### Handling findings
 
-For each finding, either fix it or decline it with a reason. A finding is declined when it contradicts an ADR, the ticket, or the user's instructions. Ablate the fixes as in step 2, validate, and commit. Then start round `n+1`.
+For each finding, either fix it or decline it with a reason. A finding is declined when it contradicts an ADR, the ticket, or the user's instructions. Ablate the fixes as in step 3, validate, and commit. Then start round `n+1`.
 
 If the reviewer repeats a finding you declined across two rounds, stop and ask the user to decide.
 
 Done when the report for the current HEAD ends with `VERDICT: PASS`.
 
-## 4. Show the UI change
+## 5. Show the UI change
 
 Skip this step when the diff changes no rendered UI.
 
@@ -71,7 +88,7 @@ Ask the reviewer for before/after screenshots, using the prompt in [`ui-shots.md
 
 Done when every changed screen has a "before" and an "after" shot, you have checked each "after" shot, and all of them are open on the user's screen.
 
-## 5. Open the PR
+## 6. Open the PR
 
 Write the body with the `pr` skill, push, and run `gh pr create`. Then watch CI with `gh pr checks --watch`, and fix any failures.
 
