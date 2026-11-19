@@ -1,6 +1,6 @@
 ---
 name: ship
-description: "Implement a ticket in its own worktree and session, ablate speculative defenses and shallow abstractions, loop a Codex thermo-nuclear review in Herdr, Rex, or Paseo until PASS, show before/after UI screenshots, then open the PR."
+description: "Implement a ticket in its own worktree, ablate speculative defenses and shallow abstractions, loop a Codex thermo-nuclear review in Herdr, Rex, or Paseo until PASS, show before/after UI screenshots, then open the PR."
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ Take one ticket from implementation to an open, green PR. The argument is a tick
 
 ## Multiplexer
 
-Each ticket runs in its own worktree, and its reviewer works in that same checkout. Use the recipe for the multiplexer this session runs in; each covers opening the worktree and driving the reviewer:
+This session does the whole ticket in place, in a git worktree, and drives a Codex reviewer beside itself. Only the reviewer depends on the multiplexer: use the recipe for the one this session runs in.
 
 - Herdr (`HERDR_ENV=1`): [`herdr.md`](herdr.md)
 - Rex (`REX_SESSION` set): [`rex.md`](rex.md)
@@ -22,9 +22,11 @@ Skip to step 2 when `git rev-parse --git-dir` differs from `git rev-parse --git-
 
 1. If given a ticket, run `gh issue view <n>` and state its title.
 2. Pick a label (`<ticket number>-<two-word slug>`, or a 2 to 4 word slug for a description) and a branch name in the repo's convention.
-3. Open the worktree with the recipe's **Worktree** section, branching from a fresh `origin/main`.
+3. Run `<this skill's dir>/worktree.sh <label> <branch>`. It branches from a fresh `origin/main` into `<main checkout>.<label>` and prints the worktree path.
 
-Done when a Claude works inside the worktree: this one, or the one the recipe handed off to.
+From here on, work in place. The shell returns to the main checkout after each call, so start every command with `cd <worktree> &&` and give file tools absolute worktree paths.
+
+Done when the worktree exists on the new branch and you hold its path. When this step is skipped, the worktree is this checkout.
 
 ## 2. Implement
 
@@ -52,15 +54,15 @@ Done when every guard and every newly named abstraction in the diff is either de
 
 ### Reviewer
 
-The reviewer is one interactive Codex agent that keeps its conversation across every round of this ticket, so each round builds on what it already read. Reset it only when it last reviewed a different ticket, as the recipe says.
+The reviewer is one interactive Codex agent started for this ticket in round 1. It keeps its conversation across every round, so each round builds on what it already read. Keep its handle for later rounds.
 
-Drive it with the recipe's **Reviewer** section.
+Start, send to, and wait on it with the recipe.
 
 ### Prompt
 
 For round `n`, write the prompt to `<scratchpad>/review-<n>-prompt.md`. Then send only `Read and follow <that path>`. This keeps quoting out of the shell. The prompt says:
 
-- `$thermo-nuclear-code-quality-review` on `git diff origin/main...HEAD`, at HEAD `<sha>`. Include untracked files if any.
+- `$thermo-nuclear-code-quality-review` on `git diff origin/main...HEAD` in `<worktree>`, at HEAD `<sha>`. Include untracked files if any. Run every command in `<worktree>`.
 - The intent: the ticket number (read it with `gh issue view`) and one paragraph on the design.
 - Apply `AGENTS.md` and `CODING_STANDARDS.md`, and flag speculative defenses and shallow abstractions.
 - From round 2 on: what each previous finding became (fixed in `<sha>`, or declined and why).

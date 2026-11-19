@@ -2,14 +2,6 @@
 
 Load the `herdr` skill.
 
-## Worktree
+**Start.** Split a pane to the right and start the reviewer there with `herdr agent start reviewer-<label> --kind codex --pane <pane> -- --dangerously-bypass-approvals-and-sandbox`. The bypass lets it read the ticket, write its report into the scratchpad, and drive a browser without stopping on approvals.
 
-Create the worktree with `<skill dir>/worktree.sh <label> <branch>`; it prints the worktree path. Then hand off: open the worktree as its own workspace with `herdr worktree open --path <worktree> --label <label> --focus --json`, then start Claude in that workspace's pane with `herdr agent start ship --kind claude --pane <pane> -- --dangerously-skip-permissions "/ship <argument>"`. Then stop; the new session carries on.
-
-## Reviewer
-
-**Start or reuse.** Reuse a live Codex agent from `herdr agent list` that runs in this workspace; another workspace's reviewer sees another worktree. If there is none, split a pane to the right and start one there with `herdr agent start reviewer --kind codex --pane <pane> -- --dangerously-bypass-approvals-and-sandbox`, so it reads the ticket, writes its report into the scratchpad, and drives a browser without stopping on approvals.
-
-**Send.** A prompt sent while `/new` is still resetting is dropped, even after `/new --wait` returns. After every prompt, check that `herdr agent get <reviewer>` reports `working`, and resend it if the agent is still `idle`.
-
-**Wait.** Run `herdr agent prompt <reviewer> "Read and follow <path>" --wait --timeout 1800000` as a background Bash command, and wait for its notification.
+**Send and wait.** Run `herdr agent prompt <reviewer> "Read and follow <path>" --wait --timeout 1800000` as a background Bash command, and wait for its notification. A prompt sent while the agent is still starting is dropped, so check that `herdr agent get <reviewer>` reports `working`, and resend if it is still `idle`.
