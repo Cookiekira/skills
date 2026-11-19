@@ -10,7 +10,7 @@ Take one ticket from implementation to an open, green PR. The argument is a tick
 
 ## Multiplexer
 
-This session does the whole ticket in place, in a git worktree, and drives a Codex reviewer beside itself. Only the reviewer depends on the multiplexer: use the recipe for the one this session runs in.
+This session does the whole ticket itself, inside a git worktree, and drives a Codex reviewer beside itself. Only the reviewer depends on the multiplexer: use the recipe for the one this session runs in.
 
 - Herdr (`HERDR_ENV=1`): [`herdr.md`](herdr.md)
 - Rex (`REX_SESSION` set): [`rex.md`](rex.md)
@@ -24,9 +24,9 @@ Skip to step 2 when `git rev-parse --git-dir` differs from `git rev-parse --git-
 2. Pick a label (`<ticket number>-<two-word slug>`, or a 2 to 4 word slug for a description) and a branch name in the repo's convention.
 3. Run `<this skill's dir>/worktree.sh <label> <branch>`. It branches from a fresh `origin/main` into `<main checkout>.<label>` and prints the worktree path.
 
-From here on, work in place. The shell returns to the main checkout after each call, so start every command with `cd <worktree> &&` and give file tools absolute worktree paths.
+4. Move this session into it with `EnterWorktree` and `path: <worktree>`. Shell, file tools, and `AGENTS.md` now all follow the worktree.
 
-Done when the worktree exists on the new branch and you hold its path. When this step is skipped, the worktree is this checkout.
+Done when this session's working directory is the worktree, on the new branch. When this step is skipped, the worktree is this checkout.
 
 ## 2. Implement
 
