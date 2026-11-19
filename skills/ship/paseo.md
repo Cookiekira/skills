@@ -2,8 +2,8 @@
 
 Load the `paseo` skill.
 
-**Start.** Start the reviewer as a subagent with `create_agent`, which opens it as a tab in this workspace: `provider: "codex/<model>"`, `settings.modeId: "full-access"`, and round 1's `Read and follow <path>` as `initialPrompt`. Full access lets it read the ticket, write its report into the scratchpad, and drive a browser without stopping on approvals.
+**Start.** Start the reviewer as a subagent with `create_agent`, which opens it as a tab in this workspace: round 1's `Read and follow <path>` as `initialPrompt`, and the reviewer's unattended mode: `provider: "codex/<model>"` with `settings.modeId: "full-access"`, or `provider: "claude/<model>"` with `settings.modeId: "bypassPermissions"`.
 
 **Send.** Send later rounds to the same `agentId` with `send_agent_prompt`.
 
-**Wait.** End your turn and wait for its finish notification.
+**Wait.** Paseo notifies you when it finishes, whichever harness you are: end your turn and wait for that notification.

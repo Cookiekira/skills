@@ -1,6 +1,6 @@
 ---
 name: ship
-description: "Implement a ticket in its own worktree, ablate speculative defenses and shallow abstractions, loop a Codex thermo-nuclear review in Herdr, Rex, or Paseo until PASS, show before/after UI screenshots, then open the PR."
+description: "Implement a ticket in its own worktree, ablate speculative defenses and shallow abstractions, loop a cross-model thermo-nuclear review in Herdr, Rex, or Paseo until PASS, show before/after UI screenshots, then open the PR."
 disable-model-invocation: true
 ---
 
@@ -8,9 +8,18 @@ disable-model-invocation: true
 
 Take one ticket from implementation to an open, green PR. The argument is a ticket reference (`#926`) or a short task description.
 
-## Multiplexer
+## Agents
 
-This session does the whole ticket itself, inside a git worktree, and drives a Codex reviewer beside itself. Only the reviewer depends on the multiplexer: use the recipe for the one this session runs in.
+Claude Code or Codex can run this skill. This session does the whole ticket itself, inside a git worktree, and drives a reviewer of the other kind beside itself, so every ticket gets a second model's read. The harness differs in three places:
+
+| This session | Enter the worktree (step 1) | Wait for a round | Reviewer command |
+| --- | --- | --- | --- |
+| Claude Code | `EnterWorktree` with `path: <worktree>` | background command; its exit re-invokes you | `codex --dangerously-bypass-approvals-and-sandbox` |
+| Codex | `workdir: <worktree>` on every shell call, absolute paths in patches | foreground command with a long timeout | `claude --dangerously-skip-permissions` |
+
+The bypass flag lets the reviewer read the ticket, write its report into the scratchpad, and drive a browser without stopping on approvals.
+
+Starting, sending to, and waiting on the reviewer depend on the multiplexer: use the recipe for the one this session runs in.
 
 - Herdr (`HERDR_ENV=1`): [`herdr.md`](herdr.md)
 - Rex (`REX_SESSION` set): [`rex.md`](rex.md)
@@ -23,7 +32,7 @@ Skip to step 2 when `git rev-parse --git-dir` differs from `git rev-parse --git-
 1. If given a ticket, run `gh issue view <n>` and state its title.
 2. Pick a label (`<ticket number>-<two-word slug>`, or a 2 to 4 word slug for a description) and a branch name in the repo's convention.
 3. Run `<this skill's dir>/worktree.sh <label> <branch>`. It branches from a fresh `origin/main` into `<main checkout>.<label>` and prints the worktree path.
-4. Move this session into it with `EnterWorktree` and `path: <worktree>`. Shell, file tools, and `AGENTS.md` now all follow the worktree.
+4. Enter the worktree as the harness table says.
 
 Done when this session's working directory is the worktree, on the new branch. When this step is skipped, the worktree is this checkout.
 
@@ -53,7 +62,7 @@ Done when every guard and every newly named abstraction in the diff is either de
 
 ### Reviewer
 
-The reviewer is one interactive Codex agent started for this ticket in round 1. It keeps its conversation across every round, so each round builds on what it already read. Keep its handle for later rounds.
+The reviewer is one interactive agent of the other kind, started for this ticket in round 1. It keeps its conversation across every round, so each round builds on what it already read. Keep its handle for later rounds.
 
 Start, send to, and wait on it with the recipe.
 
@@ -61,7 +70,7 @@ Start, send to, and wait on it with the recipe.
 
 For round `n`, write the prompt to `<scratchpad>/review-<n>-prompt.md`. Then send only `Read and follow <that path>`. This keeps quoting out of the shell. The prompt says:
 
-- `$thermo-nuclear-code-quality-review` on `git diff origin/main...HEAD` in `<worktree>`, at HEAD `<sha>`. Include untracked files if any. Run every command in `<worktree>`.
+- Read and follow `~/.agents/skills/thermo-nuclear-code-quality-review/SKILL.md` on `git diff origin/main...HEAD` in `<worktree>`, at HEAD `<sha>`. Include untracked files if any. Run every command in `<worktree>`.
 - The intent: the ticket number (read it with `gh issue view`) and one paragraph on the design.
 - Apply `AGENTS.md` and `CODING_STANDARDS.md`, and flag speculative defenses and shallow abstractions.
 - From round 2 on: what each previous finding became (fixed in `<sha>`, or declined and why).
@@ -70,7 +79,7 @@ For round `n`, write the prompt to `<scratchpad>/review-<n>-prompt.md`. Then sen
 
 ### Running a round
 
-Send `Read and follow <path>` with the recipe, and wait for the round in the background. Read the report file, not the pane.
+Send `Read and follow <path>` with the recipe, and wait for the round as the harness table says. Read the report file, not the pane.
 
 ### Handling findings
 
