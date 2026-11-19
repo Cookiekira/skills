@@ -21,7 +21,7 @@ For a new worktree, read the ticket with `gh issue view <n>` and state its title
 
 1. If the user gave a ticket and you have yet to read it, run `gh issue view <n>` and state its title.
 2. In a new worktree, run `<skill dir>/link-env.sh`, install dependencies with the repo's package manager, and run the generation steps the repo's CI runs before its checks.
-3. Implement the ticket under the repo's `AGENTS.md`. Check the acceptance criteria, validate, and commit. To **validate**, run the repo's validation commands over every file the branch changes (`git diff --name-only origin/main...HEAD`), so callers and tests outside the latest edit run too.
+3. Implement the ticket under the repo's `AGENTS.md`. Check the acceptance criteria, validate, and commit. To **validate**, run the repo's validation commands over every file the branch changes, committed or not, so callers and tests outside the latest edit run too.
 
 ## 3. Ablate
 
