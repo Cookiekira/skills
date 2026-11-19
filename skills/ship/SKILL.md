@@ -10,12 +10,11 @@ Start in a worktree for the ticket or short task the user gave you.
 
 ## 1. Open the worktree
 
-- **Paseo.** If `PASEO_AGENT_ID` is set, follow [Paseo workspace setup](paseo.md#workspace).
-- **Other environments.** If this checkout is already a linked worktree, go to step 2. Otherwise, choose names below, run `<skill dir>/worktree.sh <label> <branch>`, and enter the worktree it prints.
+If this checkout is a linked worktree, go to step 2. In Paseo (`PASEO_AGENT_ID` set), stop if the checkout is not a linked worktree.
 
 For a new worktree, read the ticket with `gh issue view <n>` and state its title. Use `<ticket number>-<two-word slug>` as the label. For a short task, use a two to four word slug. Name the branch using the repo's convention.
 
-The agent in the ticket's checkout runs the remaining steps.
+Run `<skill dir>/worktree.sh <label> <branch>` and enter the worktree it prints.
 
 ## 2. Implement
 
