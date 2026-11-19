@@ -10,17 +10,18 @@ Start in a worktree for the ticket or short task the user gave you.
 
 ## 1. Open the worktree
 
-If this checkout is a linked worktree, go to step 2. In Paseo (`PASEO_AGENT_ID` set), stop if the checkout is not a linked worktree.
+If this checkout is a linked worktree, go to step 2. Otherwise, open one below and do every later step in it.
 
 For a new worktree, read the ticket with `gh issue view <n>` and state its title. Use `<ticket number>-<two-word slug>` as the label. For a short task, use a two to four word slug. Name the branch using the repo's convention.
 
-Run `<skill dir>/worktree.sh <label> <branch>` and enter the worktree it prints.
+- **Paseo.** If `PASEO_AGENT_ID` is set, follow [Paseo workspace setup](paseo.md#workspace).
+- **Other environments.** Run `<skill dir>/worktree.sh <label> <branch>` and enter the worktree it prints.
 
 ## 2. Implement
 
 1. If the user gave a ticket and you have yet to read it, run `gh issue view <n>` and state its title.
-2. In a new worktree, run `<skill dir>/link-env.sh` and install dependencies with the repo's package manager.
-3. Implement the ticket under the repo's `AGENTS.md`. Check the acceptance criteria, run the repo's validation commands, and commit.
+2. In a new worktree, run `<skill dir>/link-env.sh`, install dependencies with the repo's package manager, and run the generation steps the repo's CI runs before its checks.
+3. Implement the ticket under the repo's `AGENTS.md`. Check the acceptance criteria, validate, and commit. To **validate**, run the repo's validation commands over every file the branch changes (`git diff --name-only origin/main...HEAD`), so callers and tests outside the latest edit run too.
 
 ## 3. Ablate
 
@@ -43,7 +44,7 @@ Start one unattended reviewer for the ticket with its bypass-approvals flag or m
 1. Write `<scratchpad>/review-<n>-prompt.md` using the instructions below.
 2. Send only `Read and follow <prompt path>` and wait using the reviewer recipe.
 3. Read `<scratchpad>/review-<n>.md`. Move to step 5 when the report for the current HEAD ends with `VERDICT: PASS`.
-4. Fix each finding or record which ADR, ticket requirement, or user instruction it contradicts. If the reviewer repeats a declined finding across two rounds, pause the loop and ask the user to decide.
+4. Weigh each finding as a peer's argument and own the call. Fix it, or decline it with a concrete reason: the ADR, ticket requirement, or user instruction it contradicts, or the cost that outweighs what it protects. Keep a declined finding declined unless the reviewer brings new evidence. If the reviewer repeats it across two rounds, pause the loop and ask the user, stating both positions.
 5. Ablate any fixes, validate, commit, and run the next round.
 
 ### Write the review prompt
