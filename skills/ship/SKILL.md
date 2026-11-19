@@ -10,14 +10,16 @@ Take one ticket from implementation to an open, green PR. The argument is a tick
 
 ## 1. Start in a worktree
 
-Skip to step 2 when `git rev-parse --git-dir` differs from `git rev-parse --git-common-dir`: this session already runs in a linked worktree.
+In Paseo (`PASEO_AGENT_ID` set), follow [Paseo workspace setup](paseo.md#workspace). In other environments, continue at step 2 if you are already in a linked worktree.
+
+For a new worktree, choose names:
 
 1. If given a ticket, run `gh issue view <n>` and state its title.
 2. Pick a label (`<ticket number>-<two-word slug>`, or a 2 to 4 word slug for a description) and a branch name in the repo's convention.
-3. Run `<this skill's dir>/worktree.sh <label> <branch>`. It branches from a fresh `origin/main` into `<main checkout>.<label>` and prints the worktree path.
-4. Enter the worktree; every later step runs there.
 
-Done when this session works in the worktree, on the new branch. When this step is skipped, the worktree is this checkout.
+Outside Paseo, run `<this skill's dir>/worktree.sh <label> <branch>` and enter the returned worktree.
+
+Done when the implementing agent runs in the ticket's checkout. That agent owns steps 2–6.
 
 ## 2. Implement
 
@@ -51,7 +53,7 @@ Start, send to, and wait on it through the multiplexer this session runs in:
 
 - Herdr (`HERDR_ENV=1`): [`herdr.md`](herdr.md)
 - Rex (`REX_SESSION` set): [`rex.md`](rex.md)
-- Paseo (`PASEO_AGENT_ID` set): [`paseo.md`](paseo.md)
+- Paseo (`PASEO_AGENT_ID` set): [Paseo reviewer](paseo.md#reviewer)
 
 ### Prompt
 
