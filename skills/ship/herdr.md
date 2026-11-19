@@ -2,9 +2,9 @@
 
 Load the `herdr` skill.
 
-## Hand off
+## Worktree
 
-Open the worktree as its own workspace with `herdr worktree open --path <worktree> --label <label> --focus --json`, then start Claude in that workspace's pane with `herdr agent start ship --kind claude --pane <pane> -- --dangerously-skip-permissions "/ship <argument>"`.
+Create the worktree with `<skill dir>/worktree.sh <label> <branch>`; it prints the worktree path. Then hand off: open the worktree as its own workspace with `herdr worktree open --path <worktree> --label <label> --focus --json`, then start Claude in that workspace's pane with `herdr agent start ship --kind claude --pane <pane> -- --dangerously-skip-permissions "/ship <argument>"`. Then stop; the new session carries on.
 
 ## Reviewer
 

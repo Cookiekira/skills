@@ -10,7 +10,7 @@ Take one ticket from implementation to an open, green PR. The argument is a tick
 
 ## Multiplexer
 
-Each ticket runs in its own worktree and its own multiplexer session, so every pane in that session shares one checkout. Use the recipe for the multiplexer this session runs in; each covers the hand-off and the reviewer:
+Each ticket runs in its own worktree, and its reviewer works in that same checkout. Use the recipe for the multiplexer this session runs in; each covers opening the worktree and driving the reviewer:
 
 - Herdr (`HERDR_ENV=1`): [`herdr.md`](herdr.md)
 - Rex (`REX_SESSION` set): [`rex.md`](rex.md)
@@ -22,14 +22,13 @@ Skip to step 2 when `git rev-parse --git-dir` differs from `git rev-parse --git-
 
 1. If given a ticket, run `gh issue view <n>` and state its title.
 2. Pick a label (`<ticket number>-<two-word slug>`, or a 2 to 4 word slug for a description) and a branch name in the repo's convention.
-3. Run `<this skill's dir>/worktree.sh <label> <branch>`. It branches from a fresh `origin/main` into `<main checkout>.<label>`, symlinks the gitignored `.env*` files, and prints the worktree path.
-4. Hand off with the recipe's **Hand off**, passing this skill's original argument, then stop.
+3. Open the worktree with the recipe's **Worktree** section, branching from a fresh `origin/main`.
 
-Done when a Claude in the new session is running `/ship` inside the worktree.
+Done when a Claude works inside the worktree: this one, or the one the recipe handed off to.
 
 ## 2. Implement
 
-1. If given a ticket, run `gh issue view <n>` and state its title.
+1. If given a ticket you have not read yet, run `gh issue view <n>` and state its title.
 2. Install dependencies with the repo's package manager; a new worktree starts without them.
 3. Implement the ticket, following the repo's `AGENTS.md`.
 4. Validate with the repo's commands, then commit.

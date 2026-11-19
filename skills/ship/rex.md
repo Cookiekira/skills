@@ -2,13 +2,15 @@
 
 Load the `rex` skill.
 
-## Hand off
+## Worktree
 
-Start a session named after the label, rooted in the worktree:
+Create the worktree with `<skill dir>/worktree.sh <label> <branch>`; it prints the worktree path. Then hand off: start a session named after the label, rooted in the worktree:
 
 ```sh
 rex new <label> -c "<worktree>" --json -- claude --dangerously-skip-permissions "/ship <argument>"
 ```
+
+Then stop; the new session carries on.
 
 ## Reviewer
 
