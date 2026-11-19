@@ -23,7 +23,6 @@ Skip to step 2 when `git rev-parse --git-dir` differs from `git rev-parse --git-
 1. If given a ticket, run `gh issue view <n>` and state its title.
 2. Pick a label (`<ticket number>-<two-word slug>`, or a 2 to 4 word slug for a description) and a branch name in the repo's convention.
 3. Run `<this skill's dir>/worktree.sh <label> <branch>`. It branches from a fresh `origin/main` into `<main checkout>.<label>` and prints the worktree path.
-
 4. Move this session into it with `EnterWorktree` and `path: <worktree>`. Shell, file tools, and `AGENTS.md` now all follow the worktree.
 
 Done when this session's working directory is the worktree, on the new branch. When this step is skipped, the worktree is this checkout.
